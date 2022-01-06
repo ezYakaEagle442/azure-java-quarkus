@@ -33,13 +33,15 @@ Ex: run CloudShell in France Central Region if you plan do deploy your resources
 # Logs at C:\ProgramData\chocolatey\logs\chocolatey.log 
 # Files cached at C:\Users\%USERNAME%\AppData\Local\Temp\chocolatey
 ```
-
 ## How to install Windows Subsystem for Linux (WSL)
 
 ```sh
 # https://chocolatey.org/packages/wsl
-choco install wsl --Yes --confirm --accept-license --verbose 
-choco install wsl-ubuntu-1804 --Yes --confirm --accept-license --verbose
+# choco install wsl --Yes --confirm --accept-license --verbose 
+# choco install wsl-ubuntu-1804 --Yes --confirm --accept-license --verbose
+
+choco install wsl2 --Yes --confirm --accept-license
+choco install wsl-ubuntu-2004 --Yes --confirm --accept-license --verbose
 
 ```
 
@@ -55,8 +57,10 @@ wsl --set-default-version 2
 
 # The update from WSL 1 to WSL 2 may take several minutes to complete depending on the size of your targeted distribution. If you are running an older (legacy) installation of WSL 1 from Windows 10 Anniversary Update or Creators Update, you may encounter an update error. Follow these instructions to uninstall and remove any legacy distributions.
 
+wsl -l -o
 wsl --list --verbose
 wsl --set-version <distribution name> <versionNumber>
+wsl --setdefault <distribution name>
 
 ```
 
@@ -70,6 +74,7 @@ https://github.com/PowerShell/PowerShell/blob/master/docs/building/linux.md
 ```sh
 # Download the Microsoft repository GPG keys
 wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
+wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
 
 # Register the Microsoft repository GPG keys
 sudo dpkg -i packages-microsoft-prod.deb
@@ -94,9 +99,9 @@ Install-Module -Name Az
 # Change Working Dir
 cd /usr/share/PowerShell
 
-# https://github.com/PowerShell/PowerShell/releases/tag/v6.1.5
-# sudo wget https://github.com/PowerShell/PowerShell/releases/download/v7.0.0-rc.2/powershell-7.0.0-rc.2-linux-x64.tar.gz
-# sudo wget https://github.com/PowerShell/PowerShell/releases/download/v6.1.5/powershell-6.1.5-linux-alpine-x64.tar.gz
+# https://github.com/PowerShell/PowerShell/releases/tag/v7.2.1
+# sudo wget https://github.com/PowerShell/PowerShell/releases/download/v7.2.1/powershell-7.2.1-linux-x64.tar.gz
+# sudo wget https://github.com/PowerShell/PowerShell/releases/download/v7.2.1/powershell-7.2.1-linux-alpine-x64.tar.gz
 # sudo tar xzvf powershell-6.1.5-linux-alpine-x64.tar.gz
 # sudo rm /usr/share/PowerShell/powershell-6.1.5-linux-alpine-x64.tar.gz
 
@@ -215,218 +220,6 @@ Ex: run CloudShell in France Central Region if you plan do deploy your resources
 # Files cached at C:\Users\%USERNAME%\AppData\Local\Temp\chocolatey
 ```
 
-## How to install Windows Subsystem for Linux (WSL)
-
-```sh
-# https://chocolatey.org/packages/wsl
-# choco install wsl --Yes --confirm --accept-license --verbose 
-# choco install wsl-ubuntu-1804 --Yes --confirm --accept-license --verbose
-
-choco install wsl2 --Yes --confirm --accept-license
-choco install wsl-ubuntu-2004 --Yes --confirm --accept-license --verbose
-
-```
-
-## Upgrade to to WSL 2
-See [https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2](https://docs.microsoft.com/en-us/windows/wsl/install-win10#update-to-wsl-2)
-Pre-req: Windows 10, updated to version 2004, **Build 19041** or higher.
-
-```sh
-dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-
-# reboot
-wsl --set-default-version 2
-
-# The update from WSL 1 to WSL 2 may take several minutes to complete depending on the size of your targeted distribution. If you are running an older (legacy) installation of WSL 1 from Windows 10 Anniversary Update or Creators Update, you may encounter an update error. Follow these instructions to uninstall and remove any legacy distributions.
-
-wsl -l -o
-wsl --list --verbose
-wsl --set-version <distribution name> <versionNumber>
-wsl --setdefault <distribution name>
-
-```
-
-## Setup PowerShell in WSL
-See :
-- [https://docs.microsoft.com/fr-fr/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-7#ubuntu-1804](https://docs.microsoft.com/fr-fr/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-7#ubuntu-1804)
-- [https://www.saggiehaim.net/powershell/install-powershell-7-on-wsl-and-ubuntu](https://www.saggiehaim.net/powershell/install-powershell-7-on-wsl-and-ubuntu)
-
-https://github.com/PowerShell/PowerShell/blob/master/docs/building/linux.md
-
-```sh
-# Download the Microsoft repository GPG keys
-wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
-
-# Register the Microsoft repository GPG keys
-sudo dpkg -i packages-microsoft-prod.deb
-
-# Update the list of products
-sudo apt-get update
-
-# Enable the "universe" repositories
-sudo add-apt-repository universe
-
-# Install PowerShell
-sudo apt-get install -y powershell
-
-# restart WSL
-pwsh
-
-Get-PSRepository
-Install-Module -Name Az
-
-# Create Folder
-# sudo mkdir /usr/share/PowerShell
-# Change Working Dir
-cd /usr/share/PowerShell
-
-# https://github.com/PowerShell/PowerShell/releases/tag/v6.1.5
-# sudo wget https://github.com/PowerShell/PowerShell/releases/download/v7.0.0-rc.2/powershell-7.0.0-rc.2-linux-x64.tar.gz
-# sudo wget https://github.com/PowerShell/PowerShell/releases/download/v6.1.5/powershell-6.1.5-linux-alpine-x64.tar.gz
-# sudo tar xzvf powershell-6.1.5-linux-alpine-x64.tar.gz
-# sudo rm /usr/share/PowerShell/powershell-6.1.5-linux-alpine-x64.tar.gz
-
-cd #HOME
- 
-# Edit the .profile file
-vim .profile # PATH="$PATH:/usr/share/PowerShell"
-
-# restart WSL
-pwsh
-
-```
-
-
-## How to install tools into Subsystem for Linux (WSL)
-
-```sh
-sudo apt-get install -y apt-transport-https
-
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo touch /etc/apt/sources.list.d/kubernetes.list 
-echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update
-sudo apt-get install -y kubectl
-kubectl api-versions
-
-```
-
-## How to install Git bash for Windows 
-
-```sh
-# https://chocolatey.org/packages/git.install
-# https://gitforwindows.org/
-choco install git.install --Yes --confirm --accept-license
-
-```
-### Git Troubleshoot
-
-[https://www.illuminiastudios.com/dev-diaries/ssh-on-windows-subsystem-for-linux](https://www.illuminiastudios.com/dev-diaries/ssh-on-windows-subsystem-for-linux)
-[https://help.github.com/en/enterprise/2.20/user/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent](https://help.github.com/en/enterprise/2.20/user/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
-
-Check the fingerprint of you SSH key in GitHub with the SSH Key used by git.
-
-If your GIT repo URL starts with HTTPS (ex: "https://github.com/<!XXXyour-git-homeXXX!/spring-petclinic.git"), git CLI will always prompt for password.
-When MFA is enabled on GitHub and that you plan to use SSH Keys, you have to use: 
-git clone git@github.com:your-git-home/spring-petclinic.git
-
-```sh
-eval `ssh-agent -s`
-eval $(ssh-agent -s) 
-sudo service ssh status
-# sudo service ssh --full-restart
-ssh-add /home/~username/.ssh/githubkey
-ssh-keygen -l -E MD5 -f /home/~username/.ssh/githubkey
-ssh -T git@github.com
-```
-
-## How to install AZ CLI with Chocolatey
-```sh
-# https://chocolatey.org/packages/azure-cli
-# do not install 2.2.0 as this is a requirement for AAD Integration : az ad app permission admin-consent
-# requires version min of 2.0.67 and max of 2.1.0.
-# AKS managed-identity requires Azure CLI, version 2.2.0 or later : https://docs.microsoft.com/en-us/azure/aks/use-managed-identity
-choco install azure-cli --Yes --confirm --accept-license --version 2.5.1 
-```
-
-## How to install Terraform with Chocolatey
-```sh
-choco install terraform --Yes --confirm --accept-license
-choco upgrade terraform --Yes --confirm --accept-license
-```
-
-## How to install Terraform on Ubuntu or WSL
-[see this blog](https://techcommunity.microsoft.com/t5/azure-developer-community-blog/configuring-terraform-on-windows-10-linux-sub-system/ba-p/393845)
-```sh
-sudo apt-get install unzip
-wget https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_linux_amd64.zip -O terraform.zip;
-unzip terraform.zip
-sudo mv terraform /usr/local/bin
-rm terraform.zip
-terraform version
-
-```
-
-## You can use any tool to run SSH & AZ CLI
-```sh
-
-sudo apt-get install -y apt-transport-https
-# https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-apt?view=azure-cli-latest
-curl -sL https://packages.microsoft.com/keys/microsoft.asc |
-    gpg --dearmor |
-    sudo tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
-
-##### git bash for windows based on Ubuntu
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-sudo apt-get update
-sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg
-
-AZ_REPO=$(lsb_release -cs)
-echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | 
-    sudo tee /etc/apt/sources.list.d/azure-cli.list
-
-sudo apt-get update
-apt search azure-cli 
-apt-cache search azure-cli 
-apt list azure-cli -a
-sudo apt-get install azure-cli # azure-cli=2.16.0-1~bionic
-
-sudo apt-get update && sudo apt-get install --only-upgrade -y azure-cli
-sudo apt-get upgrade azure-cli
-
-az version
-az login
-
-```
-
-# Install  AZ Data CLI
-
-See [https://docs.microsoft.com/en-us/sql/azdata/install/deploy-install-azdata-linux-package?view=sql-server-ver15](https://docs.microsoft.com/en-us/sql/azdata/install/deploy-install-azdata-linux-package?view=sql-server-ver15)
-
-```sh
-sudo apt-get update
-sudo apt-get install -y azdata-cli
-
-azdata
-azdata --version
-
-sudo apt-get update && sudo apt-get install --only-upgrade -y azdata-cli
-```
-
-
-## Install the AZ ARO extension
-AZ ARO is now included in the az core CLI
-see :
-- [https://docs.microsoft.com/en-us/azure/openshift/tutorial-create-cluster#install-the-az-aro-extension](https://docs.microsoft.com/en-us/azure/openshift/tutorial-create-cluster#install-the-az-aro-extension)
-- [source code](https://github.com/Azure/azure-cli/tree/dev/src/azure-cli/azure/cli/command_modules/aro)
-```sh
-# az extension add -n aro --index https://az.aroapp.io/stable
-# az extension update -n aro --index https://az.aroapp.io/stable
-# az provider register -n Microsoft.RedHatOpenShift --wait
-az -v
-
-```
-
 ## Install Azure Bicep CLI
 
 see :
@@ -465,11 +258,6 @@ chmod 700 get_helm.sh
 helm version
 ```
 
-## Kubectl-Windows-Linux-Shell
-```sh
-# https://github.com/mohatb/kubectl-wls
-
-```
 
 ## To run Docker in WSL
 The most important part is dockerd will only run on an elevated console (run as Admin) and cgroup should be always mounted before running the docker daemon.
@@ -628,22 +416,6 @@ az login
 
 ```
 
-## How to install HELM with Chocolatey
-```sh
-# https://chocolatey.org/packages/kubernetes-helm
-choco install kubernetes-helm --Yes --confirm --accept-license
-```
-## How to install HELM on Ubuntu or WSL
-```sh
-# https://helm.sh/docs/intro/install/
-# https://git.io/get_helm.sh
-
-curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-chmod 700 get_helm.sh
-./get_helm.sh
-
-helm version
-```
 
 ## Containerd Tools
 
@@ -657,6 +429,7 @@ wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRICTL_VERS
 sudo tar zxvf crictl-$CRICTL_VERSION-linux-amd64.tar.gz -C /usr/local/bin
 rm -f crictl-$CRICTL_VERSION-linux-amd64.tar.gz
 crictl --help
+crictl -v
 ```
 
 Optionnaly : If you want to run PowerShell

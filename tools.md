@@ -25,7 +25,6 @@ gpg --show-keys /etc/apt/trusted.gpg.d/microsoft-mariner-jdk.asc.gpg
 gpg --fingerprint
 gpg --verify microsoft-jdk-11.0.13.8.1-linux-x64.tar.gz.sig 464279_464280_aoc_20210208.asc
 
-# https://www.tutorialguruji.com/java/how-to-set-java_home-from-the-ubuntu-shell-on-wsl2/
 # Edit the .profile file
 vim .profile
 JAVA_HOME="$HOME/jdk-11.0.13+8"
@@ -33,6 +32,7 @@ PATH="$JAVA_HOME/bin:$PATH"
 
 . .profile
 
+java -version
 whereis java
 which java
 # sudo update-alternatives --config java
@@ -43,6 +43,12 @@ which java
 ```sh
 choco install microsoft-openjdk --Yes --accept-license --version 11.0.11.9
 # choco install openjdk --Yes --accept-license --version 11.0.2.01
+```
+# Maven setup
+```sh
+choco install maven --Yes --confirm --accept-license
+# choco install gradle --Yes --confirm --accept-license
+
 ```
 
 # Quarkus setup
@@ -127,14 +133,14 @@ Ex: run CloudShell in France Central Region if you plan do deploy your resources
 - You can upload files to the Azure Cloud Shell by dragging and dropping them
 - You can also do a `curl -o filename.ext https://file-url/filename.ext` to download a file from the internet.
 
-## You can Install [Chocolatey](https://chocolatey.org/install) on Windows
+# You can Install [Chocolatey](https://chocolatey.org/install) on Windows
 ```sh
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 
 # Logs at C:\ProgramData\chocolatey\logs\chocolatey.log 
 # Files cached at C:\Users\%USERNAME%\AppData\Local\Temp\chocolatey
 ```
-## How to install Windows Subsystem for Linux (WSL)
+# How to install Windows Subsystem for Linux (WSL)
 
 ```sh
 # https://chocolatey.org/packages/wsl
@@ -217,7 +223,7 @@ pwsh
 ```
 
 
-## How to install tools into Subsystem for Linux (WSL)
+## How to install Kubectl client into Subsystem for Linux (WSL)
 
 ```sh
 sudo apt-get install -y apt-transport-https
@@ -231,7 +237,33 @@ kubectl api-versions
 
 ```
 
-## How to install Git bash for Windows 
+## How to install Terraform on Ubuntu or WSL
+[see this blog](https://techcommunity.microsoft.com/t5/azure-developer-community-blog/configuring-terraform-on-windows-10-linux-sub-system/ba-p/393845)
+[https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/azure-get-started](https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/azure-get-started)
+```sh
+TF_VER=1.1.2
+echo "Installing TF version " $TF_VER
+sudo apt-get install unzip
+wget https://releases.hashicorp.com/terraform/$TF_VER/terraform_${TF_VER}_linux_amd64.zip -O terraform.zip;
+unzip terraform.zip
+sudo mv terraform /usr/local/bin
+rm terraform.zip
+terraform version
+```
+
+## How to installb HELM on Uuntu or WSL
+```sh
+# https://helm.sh/docs/intro/install/
+# https://git.io/get_helm.sh
+
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+
+helm version
+```
+
+# How to install Git bash for Windows 
 
 ```sh
 # https://chocolatey.org/packages/git.install
@@ -239,7 +271,7 @@ kubectl api-versions
 choco install git.install --Yes --confirm --accept-license
 
 ```
-### Git Troubleshoot
+## Git Troubleshoot
 
 [https://www.illuminiastudios.com/dev-diaries/ssh-on-windows-subsystem-for-linux](https://www.illuminiastudios.com/dev-diaries/ssh-on-windows-subsystem-for-linux)
 [https://help.github.com/en/enterprise/2.20/user/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent](https://help.github.com/en/enterprise/2.20/user/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
@@ -272,55 +304,6 @@ choco install terraform --Yes --confirm --accept-license
 choco upgrade terraform --Yes --confirm --accept-license
 ```
 
-## How to install Terraform on Ubuntu or WSL
-[see this blog](https://techcommunity.microsoft.com/t5/azure-developer-community-blog/configuring-terraform-on-windows-10-linux-sub-system/ba-p/393845)
-[https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/azure-get-started](https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/azure-get-started)
-```sh
-TF_VER=1.1.2
-echo "Installing TF version " $TF_VER
-sudo apt-get install unzip
-wget https://releases.hashicorp.com/terraform/$TF_VER/terraform_${TF_VER}_linux_amd64.zip -O terraform.zip;
-unzip terraform.zip
-sudo mv terraform /usr/local/bin
-rm terraform.zip
-terraform version
-
-# Naming conventions
-See also [See also https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/considerations/naming-and-tagging](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/considerations/naming-and-tagging)
-
-# Mardown docs
-
-- [https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
-- [https://daringfireball.net/projects/markdown/](https://daringfireball.net/projects/markdown/)
-- [https://docs.microsoft.com/en-us/contribute/markdown-reference](https://docs.microsoft.com/en-us/contribute/markdown-reference)
-
-# Azure Cloud Shell
-
-You can use the Azure Cloud Shell accessible at <https://shell.azure.com> once you login with an Azure subscription.
-See also [https://azure.microsoft.com/en-us/features/cloud-shell/](https://azure.microsoft.com/en-us/features/cloud-shell/)
-
-**/!\ IMPORTANT** Create a storage account for CloudShell in the Region where you plan to deploy your resources and accordingly.
-Ex: run CloudShell in France Central Region if you plan do deploy your resources in France Central Region
-
-**/!\ IMPORTANT** CloudShell session idle TimeOut is 20 minutes, you may find WSL/Powershell ISE more confortale.
-[https://feedback.azure.com/forums/598699-azure-cloud-shell/suggestions/32240851-fix-increase-cloudshell-timeout](https://feedback.azure.com/forums/598699-azure-cloud-shell/suggestions/32240851-fix-increase-cloudshell-timeout)
-
-[https://medium.com/@navneet.ts/azure-nugget-give-the-cloud-shell-timeout-a-timeout-c486dc544bc3](https://medium.com/@navneet.ts/azure-nugget-give-the-cloud-shell-timeout-a-timeout-c486dc544bc3)
-
-## Uploading and editing files in Azure Cloud Shell
-
-- You can use `vim <file you want to edit>` in Azure Cloud Shell to open the built-in text editor.
-- You can upload files to the Azure Cloud Shell by dragging and dropping them
-- You can also do a `curl -o filename.ext https://file-url/filename.ext` to download a file from the internet.
-
-## You can Install [Chocolatey](https://chocolatey.org/install) on Windows
-```sh
-@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-
-# Logs at C:\ProgramData\chocolatey\logs\chocolatey.log 
-# Files cached at C:\Users\%USERNAME%\AppData\Local\Temp\chocolatey
-```
-
 ## Install Azure Bicep CLI
 
 see :
@@ -334,7 +317,6 @@ az bicep version
 az bicep --help
 ```
 
-
 ## How to install HELM from RedHat
 
 See [https://docs.openshift.com/aro/4/cli_reference/helm_cli/getting-started-with-helm-on-openshift-container-platform.html](https://docs.openshift.com/aro/4/cli_reference/helm_cli/getting-started-with-helm-on-openshift-container-platform.html)
@@ -347,16 +329,11 @@ See [https://docs.openshift.com/aro/4/cli_reference/helm_cli/getting-started-wit
 # https://chocolatey.org/packages/kubernetes-helm
 choco install kubernetes-helm --Yes --confirm --accept-license
 ```
-## How to install HELM on Ubuntu or WSL
+
+## How to install Kubectl client with Chocolatey
 ```sh
-# https://helm.sh/docs/intro/install/
-# https://git.io/get_helm.sh
-
-curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-chmod 700 get_helm.sh
-./get_helm.sh
-
-helm version
+# https://chocolatey.org/packages/kubernetes-cli
+choco install kubernetes-cli --Yes --confirm --accept-license
 ```
 
 

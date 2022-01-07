@@ -1,3 +1,104 @@
+# Check the JDK version & Installation
+
+## Java-WSL2
+```sh
+# sudo apt install openjdk-11-jre-headless=11.0.13+8-0ubuntu1~20.04
+
+# https://docs.microsoft.com/en-us/java/openjdk/download
+wget https://aka.ms/download-jdk/microsoft-jdk-11.0.13.8.1-linux-x64.tar.gz
+tar -xvf microsoft-jdk-11.0.13.8.1-linux-x64.tar.gz
+
+
+# download public keys
+curl -sL https://download.visualstudio.microsoft.com/download/pr/b90071e2-e0cf-4411-98be-dbeb09d67bf0/8622862bcd54206e158c5abca0582c9b/464279_464280_aoc_20210208.asc |
+    gpg --dearmor |
+    sudo tee /etc/apt/trusted.gpg.d/microsoft-mariner-jdk.asc.gpg > /dev/null
+
+wget https://download.visualstudio.microsoft.com/download/pr/b90071e2-e0cf-4411-98be-dbeb09d67bf0/8622862bcd54206e158c5abca0582c9b/464279_464280_aoc_20210208.asc 
+gpg --import 464279_464280_aoc_20210208.asc
+gpg --list-keys
+
+# verify signatures
+# https://aka.ms/download-jdk/microsoft-jdk-11.0.13.8.1-linux-x64.tar.gz.sha256sum.txt
+wget https://aka.ms/download-jdk/microsoft-jdk-11.0.13.8.1-linux-x64.tar.gz.sig
+gpg --show-keys /etc/apt/trusted.gpg.d/microsoft-mariner-jdk.asc.gpg
+gpg --fingerprint
+gpg --verify microsoft-jdk-11.0.13.8.1-linux-x64.tar.gz.sig 464279_464280_aoc_20210208.asc
+
+# https://www.tutorialguruji.com/java/how-to-set-java_home-from-the-ubuntu-shell-on-wsl2/
+# Edit the .profile file
+vim .profile
+JAVA_HOME="$HOME/jdk-11.0.13+8"
+PATH="$JAVA_HOME/bin:$PATH"
+
+. .profile
+
+whereis java
+which java
+# sudo update-alternatives --config java
+
+```
+
+## Java-Chocolatey
+```sh
+choco install microsoft-openjdk --Yes --accept-license --version 11.0.11.9
+# choco install openjdk --Yes --accept-license --version 11.0.2.01
+```
+
+# Quarkus setup
+- [https://quarkus.io/get-started/](https://quarkus.io/get-started/)
+- [https://quarkus.io/guides/cli-tooling](https://quarkus.io/guides/cli-tooling)
+
+```sh
+curl -Ls https://sh.jbang.dev --verbose | bash -s - app install --fresh --force quarkus@quarkusio
+quarkus@quarkusio
+```
+
+If you hit the error below then follow next steps : 
+```console
+[jbang] https://repo1.maven.org/maven2/io/quarkus/quarkus-cli/2.6.1.Final/quarkus-cli-2.6.1.Final-runner.jar is not from a trusted source thus not running it automatically.
+
+If you trust the url to be safe to run you can do one of the following:
+0) Trust once: Add no trust, just run this time
+1) Trust limited url in future:
+    jbang trust add https://repo1.maven.org/maven2/io/quarkus/quarkus-cli/
+
+
+Any other response will result in exit.
+
+[jbang] Type in your choice (0 or 1) and hit enter. Times out after 10 seconds.
+[jbang] [ERROR] Could not parse answer as a number. Aborting
+[jbang] [ERROR] https://repo1.maven.org/maven2/io/quarkus/quarkus-cli/2.6.1.Final/quarkus-cli-2.6.1.Final-runner.jar is not from a trusted source and user did not confirm trust thus aborting.
+If you trust the url to be safe to run are here a few suggestions:
+Limited trust:
+     jbang trust add https://repo1.maven.org/maven2/io/quarkus/quarkus-cli/
+Trust all subdomains:
+    jbang trust add *.repo1.maven.org
+Trust all sources (WARNING! disables url protection):
+    jbang trust add *
+
+For more control edit ~/.jbang/trusted-sources.json
+```
+
+```sh
+# jbang trust add https://repo1.maven.org/maven2/io/quarkus/quarkus-cli
+# https://github.com/microsoft/WSL/issues/3161
+# https://www.pmichaels.net/2020/12/29/add-certificate-into-wsl/
+
+# export certificate from https://repo1.maven.org
+echo -n | openssl s_client -showcerts -connect repo1.maven.org:443 -servername repo1.maven.org \
+    | openssl x509 > /tmp/repo1.maven.org.cert
+
+openssl x509 -in /tmp/repo1.maven.org.cert -text -noout
+
+cp /tmp/repo1.maven.org.cert /usr/local/share/ca-certificates
+sudo update-ca-certificates
+# If it works, your certificate will be here below :
+ll /etc/ssl/certs
+```
+
+
+
 # Naming conventions
 See also [See also https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/considerations/naming-and-tagging](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/considerations/naming-and-tagging)
 

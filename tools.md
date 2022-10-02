@@ -60,7 +60,7 @@ curl -Ls https://sh.jbang.dev --verbose | bash -s - app install --fresh --force 
 quarkus@quarkusio
 ```
 
-If you hit the error below then follow next steps : 
+If you hit the error below then see https://github.com/quarkusio/quarkus/issues/22723 and follow [next steps](#Workaround) : 
 ```console
 [jbang] https://repo1.maven.org/maven2/io/quarkus/quarkus-cli/2.6.1.Final/quarkus-cli-2.6.1.Final-runner.jar is not from a trusted source thus not running it automatically.
 
@@ -101,8 +101,19 @@ cp /tmp/repo1.maven.org.cert /usr/local/share/ca-certificates
 sudo update-ca-certificates
 # If it works, your certificate will be here below :
 ll /etc/ssl/certs
+
 ```
 
+## Workaround
+See 
+- [https://github.com/quarkusio/quarkus/issues/22723](https://github.com/quarkusio/quarkus/issues/22723)
+- [JBang setup doc](https://www.jbang.dev/documentation/guide/latest/installation.html#using-jbang)
+```sh
+curl -Ls https://sh.jbang.dev | bash -s - app setup
+jbang trust add https://repo1.maven.org/maven2/io/quarkus/quarkus-cli/
+curl -Ls https://sh.jbang.dev --verbose | bash -s - app install --fresh --force quarkus@quarkusio
+quarkus -version
+```
 
 
 # Naming conventions
@@ -414,12 +425,6 @@ source <(oc completion bash)
 echo "source <(oc completion bash)" >> ~/.bashrc 
 complete -F __start_oc oc
 
-# K3S
-alias k="sudo k3s kubectl"
-source <(k completion bash) # setup autocomplete in bash into the current shell, bash-completion package should be installed first.
-echo "source <(k completion bash)" >> ~/.bashrc 
-complete -F __start_kubectl k
-
 alias kn='k config set-context --current --namespace '
 
 export gen="--dry-run=client -o yaml"
@@ -489,6 +494,8 @@ sudo apt-get install azure-cli
 
 sudo apt-get update && sudo apt-get install --only-upgrade -y azure-cli
 sudo apt-get upgrade azure-cli
+az version
+az upgrade
 
 az login
 
